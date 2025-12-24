@@ -74,3 +74,6 @@ docs/_build/
 *.png
 *.jpg
 *.jpeg
+
+.zig-cache/
+zig-out/

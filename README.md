@@ -1,17 +1,22 @@
-# ssimulacra2-rs
+# ssimulacra2-ffi
 
-Python bindings for the [ssimulacra2](https://github.com/rust-av/ssimulacra2) re-implementation in Rust
+Python bindings for the [ssimulacra2](https://github.com/cloudinary/ssimulacra2) implementation.
 
-[![PyPI version](https://img.shields.io/pypi/v/ssimulacra2-rs.svg)](https://pypi.org/project/ssimulacra2-rs/)
+[![PyPI version](https://img.shields.io/pypi/v/ssimulacra2-ffi.svg)](https://pypi.org/project/ssimulacra2-ffi/)
 
-The following `ssimulacra2` version is used: `v0.5.1`
+## Requirements
+- Python 3.10-3.14
+- Rust toolchain (stable/nightly)
+- Zig toolchain
+
+You only need Rust and Zig if you want to build the package from source. Pre-built wheels are available on PyPI for common platforms.
 
 ## Usage
 
-`ssimulacra2-rs` can be installed from PyPI:
+`ssimulacra2-ffi` can be installed from PyPI:
 
 ```bash
-pip install ssimulacra2-rs
+pip install ssimulacra2-ffi
 ```
 
 And can be used as follows:
@@ -46,9 +51,8 @@ print(f"SSIMULACRA2 score: {assessment:.2f}")
 
 ## License
 
-This project is licensed under the **BSD-3-Clause License**. See the [LICENSE](https://github.com/noaione/ssimulacra2-rs-bindings/blob/master/LICENSE) file for details.
+This project is licensed under the **BSD-3-Clause License**. See the [LICENSE](https://github.com/noaione/ssimulacra2-ffi-bindings/blob/master/LICENSE) file for details.
 
 ### Acknowledgements
 The project use the following library:
-- [ssimulacra2-rs](https://github.com/rust-av/ssimulacra2) which is licensed under the BSD-2-Clause License.
-- [ssimulacra2](https://github.com/cloudinary/ssimulacra2), the original implementation of SSIMULACRA2 in C/C++ by Cloudinary.
+- [ssimulacra2](https://github.com/cloudinary/ssimulacra2), BSD-3-Clause license by Cloudinary.

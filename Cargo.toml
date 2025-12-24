@@ -1,7 +1,15 @@
 [package]
-name = "ssimulacra2-rs"
+name = "ssimulacra2-ffi"
 version = "0.1.0"
 edition = "2024"
+authors = ["noaione <noaione@n4o.xyz>"]
+license = "BSD-3-Clause"
+repository = "https://github.com/noaione/ssimulacra2-ffi-bindings"
+homepage = "https://github.com/noaione/ssimulacra2-ffi-bindings"
+rust-version = "1.88.0"
+keywords = ["library", "ffi", "zig", "ssimulacra2", "image", "detection", "degradation"]
+description = "A binding for ssimulacra2 image quality assessment model implemented in Zig."
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
@@ -9,8 +17,7 @@ name = "_ssimulacra2"
 crate-type = ["cdylib"]
 
 [dependencies]
-# When updating, make sure to keep in sync in README.md
-ssimulacra2 = { version = "=0.5.1", features = ["rayon"], default-features = false }
+thiserror = "2.0.17"
 
 pyo3 = { version = "0.27.2", features = ["extension-module", "generate-import-lib"] }
 rayon = "1"

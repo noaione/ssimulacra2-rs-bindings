@@ -1,0 +1,3 @@
+[submodule "vendor/fssimu2"]
+	path = vendor/fssimu2
+	url = https://github.com/gianni-rosato/fssimu2.git

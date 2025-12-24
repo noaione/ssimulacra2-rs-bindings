@@ -1,12 +1,12 @@
-use ::ssimulacra2::compute_frame_ssimulacra2;
 use pyo3::{exceptions::PyRuntimeError, prelude::*};
 
-use crate::pixels::InputPixels;
+use crate::{bindings::compute_frame_ssimulacra2, pixels::InputPixels};
+mod bindings;
 mod pixels;
 
 /// ssimulacra2
 /// ~~~~~~~~~~~
-/// A Python binding for the SSIMULACRA2 image quality assessment algorithm rust re-implementation.
+/// A Python binding for the SSIMULACRA2 image quality assessment algorithm Zig re-implementation.
 ///
 /// :copyright: (c) 2025 noaione
 /// :license: BSD-3-Clause, see LICENSE for details.
@@ -37,12 +37,13 @@ fn analyze(
     width: usize,
     height: usize,
 ) -> PyResult<f64> {
-    let source_rgb = source.into_rgb(width, height, "source")?;
-    let degraded_rgb = degraded.into_rgb(width, height, "degraded")?;
+    let source_rgb = source.into_flat_rgb(width, height, "source")?;
+    let degraded_rgb = degraded.into_flat_rgb(width, height, "degraded")?;
 
-    let result = compute_frame_ssimulacra2(source_rgb, degraded_rgb).map_err(|err| {
-        PyRuntimeError::new_err(format!("Failed to compute SSIMULACRA2: {}", err))
-    })?;
+    let result =
+        compute_frame_ssimulacra2(source_rgb, degraded_rgb, width, height).map_err(|err| {
+            PyRuntimeError::new_err(format!("Failed to compute SSIMULACRA2: {}", err))
+        })?;
 
     Ok(result)
 }

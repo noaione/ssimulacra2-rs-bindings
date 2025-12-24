@@ -47,6 +47,8 @@ jobs:
       - name: Rust Target
         run: |
           rustup update stable
+      - name: Zig setup
+        uses: mlugg/setup-zig@v2
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -69,7 +71,7 @@ jobs:
       #     set -e
       #     python3 -m venv .venv
       #     source .venv/bin/activate
-      #     pip install ssimulacra2-rs --no-index --find-links dist --force-reinstall
+      #     pip install ssimulacra2-ffi --no-index --find-links dist --force-reinstall
       #     pip install pytest Pillow
       #     pytest
       # - name: pytest
@@ -85,7 +87,7 @@ jobs:
       #       pip3 install -U pip pytest Pillow
       #     run: |
       #       set -e
-      #       pip3 install ssimulacra2-rs --no-index --find-links dist --force-reinstall
+      #       pip3 install ssimulacra2-ffi --no-index --find-links dist --force-reinstall
       #       pytest
 
   # musllinux:
@@ -114,6 +116,8 @@ jobs:
   #     - name: Rust Target
   #       run: |
   #         rustup update stable
+  #     - name: Zig setup
+  #       uses: mlugg/setup-zig@v2
   #     - name: Build wheels
   #       uses: PyO3/maturin-action@v1
   #       with:
@@ -140,7 +144,7 @@ jobs:
   #           apk add py3-pip py3-virtualenv
   #           python3 -m virtualenv .venv
   #           source .venv/bin/activate
-  #           pip install ssimulacra2-rs --no-index --find-links dist --force-reinstall
+  #           pip install ssimulacra2-ffi --no-index --find-links dist --force-reinstall
   #           pip install pytest Pillow
   #           pytest
   #     - name: pytest
@@ -156,7 +160,7 @@ jobs:
   #           set -e
   #           python3 -m virtualenv .venv
   #           source .venv/bin/activate
-  #           pip install ssimulacra2-rs --no-index --find-links dist --force-reinstall
+  #           pip install ssimulacra2-ffi --no-index --find-links dist --force-reinstall
   #           pip install pytest Pillow
   #           pytest
 
@@ -185,6 +189,8 @@ jobs:
       - name: Rust Target
         run: |
           rustup update stable
+      - name: Zig setup
+        uses: mlugg/setup-zig@v2
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -206,7 +212,7 @@ jobs:
       #     set -e
       #     python3 -m venv .venv
       #     source .venv/Scripts/activate
-      #     pip install ssimulacra2-rs --no-index --find-links dist --force-reinstall
+      #     pip install ssimulacra2-ffi --no-index --find-links dist --force-reinstall
       #     pip install pytest Pillow
       #     pytest
 
@@ -232,6 +238,8 @@ jobs:
       - name: Rust Target
         run: |
           rustup update stable
+      - name: Zig setup
+        uses: mlugg/setup-zig@v2
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -251,7 +259,7 @@ jobs:
       #     set -e
       #     python3 -m venv .venv
       #     source .venv/bin/activate
-      #     pip install ssimulacra2-rs --no-index --find-links dist --force-reinstall
+      #     pip install ssimulacra2-ffi --no-index --find-links dist --force-reinstall
       #     pip install pytest Pillow
       #     pytest
 

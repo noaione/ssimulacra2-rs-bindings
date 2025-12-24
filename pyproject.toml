@@ -1,5 +1,5 @@
 [project]
-name = "ssimulacra2-rs"
+name = "ssimulacra2-ffi"
 description = "A binding for ssimulacra2 image quality assessment model implemented in Rust."
 authors = [
     {name = "noaione", email = "noaione@n4o.xyz"},
@@ -38,10 +38,10 @@ requires = ["maturin>=1.10,<2.0"]
 build-backend = "maturin"
 
 [project.urls]
-homepage = "https://github.com/noaione/ssimulacra2-rs-bindings"
-repository = "https://github.com/noaione/ssimulacra2-rs-bindings.git"
-issues = "https://github.com/noaione/ssimulacra2-rs-bindings/issues"
-changelog = "https://github.com/noaione/ssimulacra2-rs-bindings/blob/master/CHANGELOG.md"
+homepage = "https://github.com/noaione/ssimulacra2-ffi-bindings"
+repository = "https://github.com/noaione/ssimulacra2-ffi-bindings.git"
+issues = "https://github.com/noaione/ssimulacra2-ffi-bindings/issues"
+changelog = "https://github.com/noaione/ssimulacra2-ffi-bindings/blob/master/CHANGELOG.md"
 
 [tool.maturin]
 python-source = "src-maturin"
