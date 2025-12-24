@@ -47,3 +47,5 @@ changelog = "https://github.com/noaione/ssimulacra2-rs-bindings/blob/master/CHAN
 python-source = "src-maturin"
 module-name = "ssimulacra2._ssimulacra2"
 bindings = "pyo3"
+# include NOTICES file in the wheel
+include = ["NOTICES"]
