@@ -1,0 +1,3 @@
+[submodule "vendor/ssimulacra2"]
+	path = vendor/ssimulacra2
+	url = https://github.com/cloudinary/ssimulacra2.git
