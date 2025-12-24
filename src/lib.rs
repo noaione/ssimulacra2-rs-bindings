@@ -6,7 +6,7 @@ mod pixels;
 
 /// ssimulacra2
 /// ~~~~~~~~~~~
-/// A Python binding for the SSIMULACRA2 image quality assessment algorithm rust re-implementation.
+/// A Python binding for the SSIMULACRA2 image quality assessment algorithm Zig re-implementation.
 ///
 /// :copyright: (c) 2025 noaione
 /// :license: BSD-3-Clause, see LICENSE for details.
