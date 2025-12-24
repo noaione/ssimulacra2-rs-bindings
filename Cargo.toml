@@ -1,0 +1,19 @@
+[package]
+name = "ssimulacra2-rs"
+version = "0.1.0"
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "_ssimulacra2"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.27.2", features = ["extension-module", "generate-import-lib"] }
+ssimulacra2 = { version = "0.5.1", features = ["rayon"], default-features = false }
+rayon = "1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1

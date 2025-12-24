@@ -1,0 +1,48 @@
+[project]
+name = "ssimulacra2-rs"
+description = "A binding for ssimulacra2 image quality assessment model implemented in Rust."
+authors = [
+    {name = "noaione", email = "noaione@n4o.xyz"},
+]
+maintainers = [
+    {name = "noaione", email = "noaione@n4o.xyz"},
+]
+license = { text = "BSD-3-Clause" }
+keywords = ["image", "detection", "resdet", "resolution", "upscaling"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "License :: OSI Approved :: BSD-3-Clause",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Free Threading",
+    "Programming Language :: Python :: Free Threading :: 2 - Beta",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Rust",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Typing :: Typed",
+]
+requires-python = ">=3.10,<3.15"
+dynamic = ["version", "readme"]
+
+[build-system]
+requires = ["maturin>=1.10,<2.0"]
+build-backend = "maturin"
+
+[project.urls]
+homepage = "https://github.com/noaione/ssimulacra2-rs-bindings"
+repository = "https://github.com/noaione/ssimulacra2-rs-bindings.git"
+issues = "https://github.com/noaione/ssimulacra2-rs-bindings/issues"
+changelog = "https://github.com/noaione/ssimulacra2-rs-bindings/blob/master/CHANGELOG.md"
+
+[tool.maturin]
+python-source = "src-maturin"
+module-name = "ssimulacra2._ssimulacra2"
+bindings = "pyo3"
