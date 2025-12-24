@@ -25,7 +25,7 @@ pub(crate) enum InputPixels {
 }
 
 impl InputPixels {
-    pub(crate) fn to_rgb(self, width: usize, height: usize, kind: &'static str) -> PyResult<Rgb> {
+    pub(crate) fn into_rgb(self, width: usize, height: usize, kind: &'static str) -> PyResult<Rgb> {
         match self {
             InputPixels::Flat(flat) => from_pixels(flat, width, height, kind),
             InputPixels::FlatF32(flat) => from_pixels_f32(flat, width, height, kind),
@@ -126,7 +126,7 @@ impl InputPixels {
                 Ok(data)
             }
             InputPixels::RGBAF32Tuple(tuples) => {
-                PrecheckWrapF32::RGBA(&tuples).check_pixels(kind)?;
+                PrecheckWrapF32::Rgba(&tuples).check_pixels(kind)?;
                 let pixels: Vec<[f32; 3]> = tuples
                     .par_iter()
                     .map(|chunk| [chunk[0], chunk[1], chunk[2]])
@@ -146,7 +146,7 @@ impl InputPixels {
                 Ok(data)
             }
             InputPixels::RGBF32TUple(tuples) => {
-                PrecheckWrapF32::RGB(&tuples).check_pixels(kind)?;
+                PrecheckWrapF32::Rgb(&tuples).check_pixels(kind)?;
                 let data = Rgb::new(
                     tuples,
                     width,
@@ -336,8 +336,8 @@ fn from_pixels_f32(
 
 enum PrecheckWrapF32<'a> {
     Slice(&'a [f32]),
-    RGB(&'a [[f32; 3]]),
-    RGBA(&'a [[f32; 4]]),
+    Rgb(&'a [[f32; 3]]),
+    Rgba(&'a [[f32; 4]]),
     Luma(&'a [[f32; 1]]),
 }
 
@@ -352,7 +352,7 @@ impl<'a> PrecheckWrapF32<'a> {
                 }
                 Ok(())
             }
-            PrecheckWrapF32::RGB(tuples) => {
+            PrecheckWrapF32::Rgb(tuples) => {
                 if tuples.par_iter().any(|t| t.iter().any(outside_range_f32)) {
                     return Err(PyValueError::new_err(format!(
                         "`{kind}` pixel data contains non-finite or out-of-range values (should be in [0.0, 1.0])."
@@ -360,7 +360,7 @@ impl<'a> PrecheckWrapF32<'a> {
                 }
                 Ok(())
             }
-            PrecheckWrapF32::RGBA(tuples) => {
+            PrecheckWrapF32::Rgba(tuples) => {
                 if tuples.par_iter().any(|t| t.iter().any(outside_range_f32)) {
                     return Err(PyValueError::new_err(format!(
                         "`{kind}` pixel data contains non-finite or out-of-range values (should be in [0.0, 1.0])."

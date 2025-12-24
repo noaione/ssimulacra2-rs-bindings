@@ -37,8 +37,8 @@ fn analyze(
     width: usize,
     height: usize,
 ) -> PyResult<f64> {
-    let source_rgb = source.to_rgb(width, height, "source")?;
-    let degraded_rgb = degraded.to_rgb(width, height, "degraded")?;
+    let source_rgb = source.into_rgb(width, height, "source")?;
+    let degraded_rgb = degraded.into_rgb(width, height, "degraded")?;
 
     let result = compute_frame_ssimulacra2(source_rgb, degraded_rgb).map_err(|err| {
         PyRuntimeError::new_err(format!("Failed to compute SSIMULACRA2: {}", err))
