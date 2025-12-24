@@ -9,8 +9,10 @@ name = "_ssimulacra2"
 crate-type = ["cdylib"]
 
 [dependencies]
+# When updating, make sure to keep in sync in README.md
+ssimulacra2 = { version = "=0.5.1", features = ["rayon"], default-features = false }
+
 pyo3 = { version = "0.27.2", features = ["extension-module", "generate-import-lib"] }
-ssimulacra2 = { version = "0.5.1", features = ["rayon"], default-features = false }
 rayon = "1"
 
 [profile.release]

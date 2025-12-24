@@ -8,18 +8,19 @@ maintainers = [
     {name = "noaione", email = "noaione@n4o.xyz"},
 ]
 license = { text = "BSD-3-Clause" }
-keywords = ["image", "detection", "resdet", "resolution", "upscaling"]
+keywords = ["image", "detection", "ssimulacra", "ssimulacra2", "degradation"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries",
     "Topic :: Scientific/Engineering :: Image Processing",
-    "License :: OSI Approved :: BSD-3-Clause",
+    "License :: OSI Approved :: BSD License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Free Threading",
     "Programming Language :: Python :: Free Threading :: 2 - Beta",
     "Programming Language :: Python :: Implementation :: CPython",

@@ -2,7 +2,9 @@
 
 Python bindings for the [ssimulacra2](https://github.com/rust-av/ssimulacra2) re-implementation in Rust
 
-[![PyPI version](https://img.shields.io/pypi/v/ssimulacra2-rs.svg)](https://pypi.org/project/resdet/)
+[![PyPI version](https://img.shields.io/pypi/v/ssimulacra2-rs.svg)](https://pypi.org/project/ssimulacra2-rs/)
+
+The following `ssimulacra2` version is used: `v0.5.1`
 
 ## Usage
 
