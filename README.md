@@ -4,6 +4,13 @@ Python bindings for the [ssimulacra2](https://github.com/cloudinary/ssimulacra2)
 
 [![PyPI version](https://img.shields.io/pypi/v/ssimulacra2-ffi.svg)](https://pypi.org/project/ssimulacra2-ffi/)
 
+## Requirements
+- Python 3.10-3.14
+- Rust toolchain (stable/nightly)
+- Zig toolchain
+
+You only need Rust and Zig if you want to build the package from source. Pre-built wheels are available on PyPI for common platforms.
+
 ## Usage
 
 `ssimulacra2-ffi` can be installed from PyPI:

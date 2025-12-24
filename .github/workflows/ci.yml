@@ -47,6 +47,8 @@ jobs:
       - name: Rust Target
         run: |
           rustup update stable
+      - name: Zig setup
+        uses: mlugg/setup-zig@v2
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -114,6 +116,8 @@ jobs:
   #     - name: Rust Target
   #       run: |
   #         rustup update stable
+  #     - name: Zig setup
+  #       uses: mlugg/setup-zig@v2
   #     - name: Build wheels
   #       uses: PyO3/maturin-action@v1
   #       with:
@@ -185,6 +189,8 @@ jobs:
       - name: Rust Target
         run: |
           rustup update stable
+      - name: Zig setup
+        uses: mlugg/setup-zig@v2
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -232,6 +238,8 @@ jobs:
       - name: Rust Target
         run: |
           rustup update stable
+      - name: Zig setup
+        uses: mlugg/setup-zig@v2
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
