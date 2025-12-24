@@ -1,9 +1,8 @@
-use ::ssimulacra2::{ColorPrimaries, Rgb, TransferCharacteristic, compute_frame_ssimulacra2};
-use pyo3::{
-    exceptions::{PyRuntimeError, PyValueError},
-    prelude::*,
-};
-use rayon::{iter::ParallelIterator, slice::ParallelSlice};
+use ::ssimulacra2::compute_frame_ssimulacra2;
+use pyo3::{exceptions::PyRuntimeError, prelude::*};
+
+use crate::pixels::InputPixels;
+mod pixels;
 
 /// ssimulacra2
 /// ~~~~~~~~~~~
@@ -29,53 +28,21 @@ fn _ssimulacra2(m: &Bound<'_, PyModule>) -> PyResult<()> {
 /// :param height: The height of the images.
 /// :return: The SSIMULACRA2 score as a float.
 #[pyfunction]
-fn analyze(source: Vec<u8>, degraded: Vec<u8>, width: usize, height: usize) -> PyResult<f64> {
-    precheck(&source, width, height, "source")?;
-    precheck(&degraded, width, height, "degraded")?;
+#[pyo3(
+    signature = (*, source, degraded, width, height)
+)]
+fn analyze(
+    source: InputPixels,
+    degraded: InputPixels,
+    width: usize,
+    height: usize,
+) -> PyResult<f64> {
+    let source_rgb = source.to_rgb(width, height, "source")?;
+    let degraded_rgb = degraded.to_rgb(width, height, "degraded")?;
 
-    let source_rgb = from_pixels(source, width, height)?;
-    let distorted_rgb = from_pixels(degraded, width, height)?;
-    let result = compute_frame_ssimulacra2(source_rgb, distorted_rgb).map_err(|err| {
+    let result = compute_frame_ssimulacra2(source_rgb, degraded_rgb).map_err(|err| {
         PyRuntimeError::new_err(format!("Failed to compute SSIMULACRA2: {}", err))
     })?;
 
     Ok(result)
-}
-
-fn from_pixels(data: Vec<u8>, width: usize, height: usize) -> PyResult<Rgb> {
-    // We already verified the length in precheck
-    let fast_inv: f32 = 1.0 / 255.0;
-    let pixels: Vec<[f32; 3]> = data
-        .par_chunks_exact(3)
-        .map(|chunk| {
-            [
-                chunk[0] as f32 * fast_inv,
-                chunk[1] as f32 * fast_inv,
-                chunk[2] as f32 * fast_inv,
-            ]
-        })
-        .collect();
-
-    let data = Rgb::new(
-        pixels,
-        width,
-        height,
-        TransferCharacteristic::SRGB,
-        ColorPrimaries::BT709,
-    )
-    .map_err(|err| PyRuntimeError::new_err(format!("Failed to create Rgb image: {}", err)))?;
-
-    Ok(data)
-}
-
-fn precheck(data: &[u8], width: usize, height: usize, kind: &'static str) -> PyResult<()> {
-    if data.len() != width * height * 3 {
-        return Err(PyValueError::new_err(format!(
-            "{kind} length does not match width and height: expected {}, got {}",
-            width * height * 3,
-            data.len()
-        )));
-    }
-
-    Ok(())
 }
