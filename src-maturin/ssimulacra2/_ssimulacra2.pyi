@@ -36,7 +36,7 @@ InputPixels: TypeAlias = (
 )
 """The type alias for all supported input pixel formats."""
 
-def analyze(source: InputPixels, degraded: InputPixels, width: int, height: int) -> float:
+def analyze(*, source: InputPixels, degraded: InputPixels, width: int, height: int) -> float:
     """Analyze the given source and degraded images.
 
     :param source: A list of numbers representing the source image pixels in RGB8/RGBA8/Luma8 format.
