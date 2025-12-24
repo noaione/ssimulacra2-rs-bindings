@@ -341,25 +341,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
-name = "ssimulacra2"
-version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "700cb4e17f98c3f36756815b18dbec2b2e3c4f5028e9cdee3e23dd8c285e736c"
+name = "ssimulacra2-rs"
+version = "0.1.0"
 dependencies = [
  "num-traits",
+ "pyo3",
  "rayon",
  "thiserror",
  "yuvxyb",
  "yuvxyb-math",
-]
-
-[[package]]
-name = "ssimulacra2-rs"
-version = "0.1.0"
-dependencies = [
- "pyo3",
- "rayon",
- "ssimulacra2",
 ]
 
 [[package]]

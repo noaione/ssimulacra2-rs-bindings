@@ -1,4 +1,3 @@
-use ::ssimulacra2::{ColorPrimaries, TransferCharacteristic};
 use pyo3::{
     FromPyObject, PyResult,
     exceptions::{PyRuntimeError, PyValueError},
@@ -7,7 +6,7 @@ use rayon::{
     iter::{IntoParallelRefIterator, ParallelIterator},
     slice::ParallelSlice,
 };
-use ssimulacra2::Rgb;
+use yuvxyb::{ColorPrimaries, Rgb, TransferCharacteristic};
 
 /// Quick inverse for u8 to f32 conversion
 const FAST_INV: f32 = 1.0 / 255.0;
@@ -25,6 +24,7 @@ pub(crate) enum InputPixels {
 }
 
 impl InputPixels {
+    #[inline]
     pub(crate) fn into_rgb(self, width: usize, height: usize, kind: &'static str) -> PyResult<Rgb> {
         match self {
             InputPixels::Flat(flat) => from_pixels(flat, width, height, kind),
@@ -164,6 +164,7 @@ impl InputPixels {
     }
 }
 
+#[inline]
 fn from_pixels_rgba(data: Vec<u8>, width: usize, height: usize) -> PyResult<Rgb> {
     // We already verified the length in precheck
     let pixels: Vec<[f32; 3]> = data
@@ -189,6 +190,7 @@ fn from_pixels_rgba(data: Vec<u8>, width: usize, height: usize) -> PyResult<Rgb>
     Ok(data)
 }
 
+#[inline]
 fn from_pixels_rgb(data: Vec<u8>, width: usize, height: usize) -> PyResult<Rgb> {
     // We already verified the length in precheck
     let pixels: Vec<[f32; 3]> = data
@@ -214,6 +216,7 @@ fn from_pixels_rgb(data: Vec<u8>, width: usize, height: usize) -> PyResult<Rgb> 
     Ok(data)
 }
 
+#[inline]
 fn from_pixels_luma(data: Vec<u8>, width: usize, height: usize) -> PyResult<Rgb> {
     // We already verified the length in precheck
     let pixels: Vec<[f32; 3]> = data
@@ -236,6 +239,7 @@ fn from_pixels_luma(data: Vec<u8>, width: usize, height: usize) -> PyResult<Rgb>
     Ok(data)
 }
 
+#[inline]
 fn from_pixels(data: Vec<u8>, width: usize, height: usize, kind: &'static str) -> PyResult<Rgb> {
     let length = data.len();
     // start by checking for RGBA
@@ -252,6 +256,7 @@ fn from_pixels(data: Vec<u8>, width: usize, height: usize, kind: &'static str) -
     }
 }
 
+#[inline]
 fn from_pixels_rgba_f32(data: Vec<f32>, width: usize, height: usize) -> PyResult<Rgb> {
     // We already verified the length in precheck
     let pixels: Vec<[f32; 3]> = data
@@ -271,6 +276,7 @@ fn from_pixels_rgba_f32(data: Vec<f32>, width: usize, height: usize) -> PyResult
     Ok(data)
 }
 
+#[inline]
 fn from_pixels_rgb_f32(data: Vec<f32>, width: usize, height: usize) -> PyResult<Rgb> {
     // We already verified the length in precheck
     let pixels: Vec<[f32; 3]> = data
@@ -290,6 +296,7 @@ fn from_pixels_rgb_f32(data: Vec<f32>, width: usize, height: usize) -> PyResult<
     Ok(data)
 }
 
+#[inline]
 fn from_pixels_luma_f32(data: Vec<f32>, width: usize, height: usize) -> PyResult<Rgb> {
     // We already verified the length in precheck
     let pixels: Vec<[f32; 3]> = data
@@ -312,6 +319,7 @@ fn from_pixels_luma_f32(data: Vec<f32>, width: usize, height: usize) -> PyResult
     Ok(data)
 }
 
+#[inline]
 fn from_pixels_f32(
     data: Vec<f32>,
     width: usize,
@@ -342,6 +350,7 @@ enum PrecheckWrapF32<'a> {
 }
 
 impl<'a> PrecheckWrapF32<'a> {
+    #[inline]
     fn check_pixels(self, kind: &'static str) -> PyResult<()> {
         match self {
             PrecheckWrapF32::Slice(slice) => {

@@ -1,8 +1,8 @@
-use ::ssimulacra2::compute_frame_ssimulacra2;
 use pyo3::{exceptions::PyRuntimeError, prelude::*};
 
-use crate::pixels::InputPixels;
+use crate::{pixels::InputPixels, vendor::ssimulacra2::compute_frame_ssimulacra2};
 mod pixels;
+mod vendor;
 
 /// ssimulacra2
 /// ~~~~~~~~~~~
@@ -37,12 +37,18 @@ fn analyze(
     width: usize,
     height: usize,
 ) -> PyResult<f64> {
+    println!("Analyzing images of size {}x{}", width, height);
     let source_rgb = source.into_rgb(width, height, "source")?;
+    println!("Converted source image to RGB format");
     let degraded_rgb = degraded.into_rgb(width, height, "degraded")?;
+    println!("Converted degraded image to RGB format");
 
+    let start = std::time::Instant::now();
     let result = compute_frame_ssimulacra2(source_rgb, degraded_rgb).map_err(|err| {
         PyRuntimeError::new_err(format!("Failed to compute SSIMULACRA2: {}", err))
     })?;
+    let duration = start.elapsed();
+    println!("Computed SSIMULACRA2 score: {} in {:?}", result, duration);
 
     Ok(result)
 }
