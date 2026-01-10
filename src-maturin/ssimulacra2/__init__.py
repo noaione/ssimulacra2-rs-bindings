@@ -29,12 +29,11 @@ __name__ = "ssimulacra2"
 __package__ = "ssimulacra2"
 
 
-def pil_analyze(*, source: "Image.Image", degraded: "Image.Image", force_scalar: bool = False) -> float:
+def pil_analyze(*, source: "Image.Image", degraded: "Image.Image") -> float:
     """Analyze the given source and degraded images from PIL Image objects.
 
     :param source: A PIL Image object representing the source image in RGB8/RGBA8/Luma8 format.
     :param degraded: A PIL Image object representing the degraded image in RGB8/RGBA8/Luma8 format.
-    :param force_scalar: Whether to force the use of scalar computations instead of SIMD.
     :return: The SSIMULACRA2 score as a float.
     """
 
@@ -48,5 +47,5 @@ def pil_analyze(*, source: "Image.Image", degraded: "Image.Image", force_scalar:
     degraded_pixels = list(degraded.getdata())  # type: ignore
     width, height = source.width, source.height
     return analyze(
-        source=source_pixels, degraded=degraded_pixels, width=width, height=height, force_scalar=force_scalar
+        source=source_pixels, degraded=degraded_pixels, width=width, height=height
     )

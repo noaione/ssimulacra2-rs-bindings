@@ -42,7 +42,6 @@ def analyze(
     degraded: InputPixels,
     width: int,
     height: int,
-    force_scalar: bool = False
 ) -> float:
     """Analyze the given source and degraded images.
 
@@ -50,7 +49,6 @@ def analyze(
     :param degraded: A list of numbers representing the degraded image pixels in RGB8/RGBA8/Luma8 format.
     :param width: The width of the images.
     :param height: The height of the images.
-    :param force_scalar: Whether to force the use of scalar computations instead of SIMD.
     :return: The SSIMULACRA2 score as a float.
     """
     ...
