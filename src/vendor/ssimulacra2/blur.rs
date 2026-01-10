@@ -159,6 +159,7 @@ mod gaussian {
             self.horizontal_pass_simd_with_backend(SimdBackend::detect(), input, output, width);
         }
 
+        #[inline(always)]
         pub fn horizontal_pass_simd_with_backend(
             &self,
             backend: SimdBackend,
@@ -186,6 +187,7 @@ mod gaussian {
             }
         }
 
+        #[inline(always)]
         fn horizontal_pass_simd_impl<D: jxl_simd::SimdDescriptor>(
             &self,
             d: D,
@@ -229,6 +231,7 @@ mod gaussian {
             }
         }
 
+        #[inline(always)]
         fn horizontal_rows_simd<D: jxl_simd::SimdDescriptor>(
             &self,
             d: D,
@@ -421,6 +424,7 @@ mod gaussian {
             );
         }
 
+        #[inline(always)]
         pub fn vertical_pass_simd_with_backend(
             &self,
             backend: SimdBackend,
@@ -454,6 +458,7 @@ mod gaussian {
             }
         }
 
+        #[inline(always)]
         fn vertical_pass_simd_impl<D: jxl_simd::SimdDescriptor>(
             &self,
             d: D,
@@ -479,6 +484,7 @@ mod gaussian {
             }
         }
 
+        #[inline(always)]
         fn vertical_columns_simd<D: jxl_simd::SimdDescriptor>(
             &self,
             d: D,
@@ -638,6 +644,7 @@ mod gaussian {
             self.vertical_pass_fixed::<1, 3>(input, output, width, height);
         }
 
+        #[inline(always)]
         fn vertical_pass_fixed<const COLUMNS: usize, const STATE: usize>(
             &self,
             input: &[f32],

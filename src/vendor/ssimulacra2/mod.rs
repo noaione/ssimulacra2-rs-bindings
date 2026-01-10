@@ -132,6 +132,7 @@ where
 //  B: 0.272295..0.938012
 // The maximum pixel-wise difference has to be <= 1 for the ssim formula to make
 // sense.
+#[inline(always)]
 fn make_positive_xyb(xyb: &mut Xyb) {
     for pix in xyb.data_mut().iter_mut() {
         pix[2] = (pix[2] - pix[1]) + 0.55;
@@ -140,6 +141,7 @@ fn make_positive_xyb(xyb: &mut Xyb) {
     }
 }
 
+#[inline(always)]
 fn xyb_to_planar(xyb: &Xyb) -> [Vec<f32>; 3] {
     let mut out1 = vec![0.0f32; xyb.width() * xyb.height()];
     let mut out2 = vec![0.0f32; xyb.width() * xyb.height()];
@@ -160,6 +162,7 @@ fn xyb_to_planar(xyb: &Xyb) -> [Vec<f32>; 3] {
     [out1, out2, out3]
 }
 
+#[inline(always)]
 fn image_multiply(img1: &[Vec<f32>; 3], img2: &[Vec<f32>; 3], out: &mut [Vec<f32>; 3]) {
     for ((plane1, plane2), out_plane) in img1.iter().zip(img2.iter()).zip(out.iter_mut()) {
         for ((&p1, &p2), o) in plane1.iter().zip(plane2.iter()).zip(out_plane.iter_mut()) {
@@ -168,6 +171,7 @@ fn image_multiply(img1: &[Vec<f32>; 3], img2: &[Vec<f32>; 3], out: &mut [Vec<f32
     }
 }
 
+#[inline(always)]
 fn downscale_by_2(in_data: &LinearRgb) -> LinearRgb {
     const SCALE: usize = 2;
     let in_w = in_data.width();
@@ -200,6 +204,7 @@ fn downscale_by_2(in_data: &LinearRgb) -> LinearRgb {
     LinearRgb::new(out_data, out_w, out_h).expect("Resolution and data size match")
 }
 
+#[inline(always)]
 fn ssim_map(
     width: usize,
     height: usize,
@@ -259,6 +264,7 @@ fn ssim_map(
     plane_averages
 }
 
+#[inline(always)]
 fn edge_diff_map(
     width: usize,
     height: usize,
