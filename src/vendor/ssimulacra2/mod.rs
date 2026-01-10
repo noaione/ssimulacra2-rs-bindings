@@ -7,8 +7,6 @@
 
 pub mod blur;
 
-#[allow(unused_imports)]
-pub use blur::Blur;
 pub use blur::BlurSimd;
 pub use yuvxyb::{LinearRgb, Xyb};
 
@@ -42,11 +40,7 @@ pub enum Ssimulacra2Error {
 /// - If the source and distorted image width and height do not match
 /// - If the source or distorted image cannot be converted to XYB successfully
 /// - If the image is smaller than 8x8 pixels
-pub fn compute_frame_ssimulacra2<T, U>(
-    source: T,
-    distorted: U,
-    force_scalar: bool,
-) -> Result<f64, Ssimulacra2Error>
+pub fn compute_frame_ssimulacra2<T, U>(source: T, distorted: U) -> Result<f64, Ssimulacra2Error>
 where
     LinearRgb: TryFrom<T> + TryFrom<U>,
 {
@@ -76,157 +70,52 @@ where
     ];
     let mut blur = BlurSimd::new(width, height);
     let mut msssim = Msssim::default();
-    println!("Using SIMD backend: {:?}", blur.backend());
-    if force_scalar {
-        println!("Forcing scalar backend for blur operations");
-        blur.set_backend(blur::SimdBackend::Scalar);
-    }
 
     for scale in 0..NUM_SCALES {
-        println!("Computing scale {}: {}x{}", scale + 1, width, height);
-        let start_overall = std::time::Instant::now();
         if width < 8 || height < 8 {
             break;
         }
 
         if scale > 0 {
-            let start_img1 = std::time::Instant::now();
             img1 = downscale_by_2(&img1);
-            println!(
-                "   Downscaled image 1 to {}x{} in {:?}",
-                img1.width(),
-                img1.height(),
-                start_img1.elapsed()
-            );
-            let start_img2 = std::time::Instant::now();
             img2 = downscale_by_2(&img2);
-            println!(
-                "   Downscaled image 2 to {}x{} in {:?}",
-                img2.width(),
-                img2.height(),
-                start_img2.elapsed()
-            );
             width = img1.width();
             height = img2.height();
         }
-        let start_blur = std::time::Instant::now();
         for c in &mut mul {
             c.truncate(width * height);
         }
-        println!(
-            "  Prepared multiplication buffers for scale {} in {:?}",
-            scale,
-            start_blur.elapsed()
-        );
-        let start_blur = std::time::Instant::now();
         blur.shrink_to(width, height);
-        println!(
-            "  Resized blur buffers for scale {} in {:?}",
-            scale,
-            start_blur.elapsed()
-        );
 
         let mut img1 = Xyb::from(img1.clone());
         let mut img2 = Xyb::from(img2.clone());
 
-        let start_xyb1 = std::time::Instant::now();
         make_positive_xyb(&mut img1);
-        println!(
-            "  Converted image 1 to positive XYB in {:?}",
-            start_xyb1.elapsed()
-        );
-        let start_xyb2 = std::time::Instant::now();
         make_positive_xyb(&mut img2);
-        println!(
-            "  Converted image 2 to positive XYB in {:?}",
-            start_xyb2.elapsed()
-        );
 
         // SSIMULACRA2 works with the data in a planar format,
         // so we need to convert to that.
-        let start_img1 = std::time::Instant::now();
         let img1 = xyb_to_planar(&img1);
-        println!(
-            "  Converted image 1 to planar format in {:?}",
-            start_img1.elapsed()
-        );
-        let start_img2 = std::time::Instant::now();
         let img2 = xyb_to_planar(&img2);
-        println!(
-            "  Converted image 2 to planar format in {:?}",
-            start_img2.elapsed()
-        );
 
-        let start_sigm1 = std::time::Instant::now();
         image_multiply(&img1, &img1, &mut mul);
-        println!(
-            "  Multiplied image 1 with itself in {:?}",
-            start_sigm1.elapsed()
-        );
-        let start_sigm1 = std::time::Instant::now();
         let sigma1_sq = blur.blur(&mul);
-        println!(
-            "   Blurred squared image 1 to get sigma1^2 in {:?}",
-            start_sigm1.elapsed()
-        );
 
-        let start_sigm2 = std::time::Instant::now();
         image_multiply(&img2, &img2, &mut mul);
-        println!(
-            "  Multiplied image 2 with itself in {:?}",
-            start_sigm2.elapsed()
-        );
-        let start_sigm2 = std::time::Instant::now();
         let sigma2_sq = blur.blur(&mul);
-        println!(
-            "   Blurred squared image 2 to get sigma2^2 in {:?}",
-            start_sigm2.elapsed()
-        );
 
-        let start_sigm12 = std::time::Instant::now();
         image_multiply(&img1, &img2, &mut mul);
-        println!(
-            "  Multiplied image 1 with image 2 in {:?}",
-            start_sigm12.elapsed()
-        );
-        let start_sigm12 = std::time::Instant::now();
         let sigma12 = blur.blur(&mul);
-        println!(
-            "   Blurred product image to get sigma12 in {:?}",
-            start_sigm12.elapsed()
-        );
 
-        let start_mu = std::time::Instant::now();
         let mu1 = blur.blur(&img1);
-        println!("  Blurred image 1 to get mu1 in {:?}", start_mu.elapsed());
-        let start_mu = std::time::Instant::now();
         let mu2 = blur.blur(&img2);
-        println!("  Blurred image 2 to get mu2 in {:?}", start_mu.elapsed());
 
-        let start_ssim = std::time::Instant::now();
         let avg_ssim = ssim_map(width, height, &mu1, &mu2, &sigma1_sq, &sigma2_sq, &sigma12);
-        println!(
-            "  Computed SSIM map and averages in {:?}",
-            start_ssim.elapsed()
-        );
-        let start_edgediff = std::time::Instant::now();
         let avg_edgediff = edge_diff_map(width, height, &img1, &mu1, &img2, &mu2);
-        println!(
-            "  Computed edge difference map and averages in {:?}",
-            start_edgediff.elapsed()
-        );
         msssim.scales.push(MsssimScale {
             avg_ssim,
             avg_edgediff,
         });
-        let duration_overall = start_overall.elapsed();
-        println!(
-            "Scale {}: {}x{} computed in {:?}\n",
-            scale + 1,
-            width,
-            height,
-            duration_overall
-        );
     }
 
     Ok(msssim.score())

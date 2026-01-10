@@ -29,28 +29,20 @@ fn _ssimulacra2(m: &Bound<'_, PyModule>) -> PyResult<()> {
 /// :return: The SSIMULACRA2 score as a float.
 #[pyfunction]
 #[pyo3(
-    signature = (*, source, degraded, width, height, force_scalar = false)
+    signature = (*, source, degraded, width, height)
 )]
 fn analyze(
     source: InputPixels,
     degraded: InputPixels,
     width: usize,
     height: usize,
-    force_scalar: bool,
 ) -> PyResult<f64> {
-    println!("Analyzing images of size {}x{}", width, height);
     let source_rgb = source.into_rgb(width, height, "source")?;
-    println!("Converted source image to RGB format");
     let degraded_rgb = degraded.into_rgb(width, height, "degraded")?;
-    println!("Converted degraded image to RGB format");
 
-    let start = std::time::Instant::now();
-    let result =
-        compute_frame_ssimulacra2(source_rgb, degraded_rgb, force_scalar).map_err(|err| {
-            PyRuntimeError::new_err(format!("Failed to compute SSIMULACRA2: {}", err))
-        })?;
-    let duration = start.elapsed();
-    println!("Computed SSIMULACRA2 score: {} in {:?}", result, duration);
+    let result = compute_frame_ssimulacra2(source_rgb, degraded_rgb).map_err(|err| {
+        PyRuntimeError::new_err(format!("Failed to compute SSIMULACRA2: {}", err))
+    })?;
 
     Ok(result)
 }

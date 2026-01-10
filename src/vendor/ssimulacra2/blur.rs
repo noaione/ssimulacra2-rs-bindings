@@ -1,7 +1,6 @@
 use gaussian::RecursiveGaussian;
-pub(crate) use gaussian::SimdBackend;
 
-/// Structure handling image blur.
+/// Structure handling image blur with SIMD acceleration.
 ///
 /// This struct contains the necessary buffers and the kernel used for blurring
 /// (currently a recursive approximation of the Gaussian filter).
@@ -9,67 +8,12 @@ pub(crate) use gaussian::SimdBackend;
 /// Note that the width and height of the image passed to [blur][Self::blur] needs to exactly
 /// match the width and height of this instance. If you reduce the image size (e.g. via
 /// downscaling), [`shrink_to`][Self::shrink_to] can be used to resize the internal buffers.
-#[allow(dead_code)]
-pub struct Blur {
-    kernel: RecursiveGaussian,
-    temp: Vec<f32>,
-    width: usize,
-    height: usize,
-}
-
-/// SIMD-optimized variant of [`Blur`].
-///
-/// This keeps the same buffer ownership model as `Blur` (re-using allocations via `shrink_to`),
-/// but routes the horizontal+vertical passes through SIMD-enabled kernels.
 pub struct BlurSimd {
     kernel: RecursiveGaussian,
     temp: Vec<f32>,
     width: usize,
     height: usize,
     backend: gaussian::SimdBackend,
-}
-
-#[allow(dead_code)]
-impl Blur {
-    /// Create a new [Blur] for images of the given width and height.
-    /// This pre-allocates the necessary buffers.
-    #[must_use]
-    pub fn new(width: usize, height: usize) -> Self {
-        Blur {
-            kernel: RecursiveGaussian,
-            temp: vec![0.0f32; width * height],
-            width,
-            height,
-        }
-    }
-
-    /// Truncates the internal buffers to fit images of the given width and height.
-    ///
-    /// This will [truncate][Vec::truncate] the internal buffers
-    /// without affecting the allocated memory.
-    pub fn shrink_to(&mut self, width: usize, height: usize) {
-        self.temp.truncate(width * height);
-        self.width = width;
-        self.height = height;
-    }
-
-    /// Blur the given image.
-    pub fn blur(&mut self, img: &[Vec<f32>; 3]) -> [Vec<f32>; 3] {
-        [
-            self.blur_plane(&img[0]),
-            self.blur_plane(&img[1]),
-            self.blur_plane(&img[2]),
-        ]
-    }
-
-    fn blur_plane(&mut self, plane: &[f32]) -> Vec<f32> {
-        let mut out = vec![0f32; self.width * self.height];
-        self.kernel
-            .horizontal_pass(plane, &mut self.temp, self.width);
-        self.kernel
-            .vertical_pass_chunked::<128, 32>(&self.temp, &mut out, self.width, self.height);
-        out
-    }
 }
 
 impl BlurSimd {
@@ -87,11 +31,13 @@ impl BlurSimd {
     }
 
     /// Get the detected SIMD backend
+    #[expect(dead_code)]
     pub fn backend(&self) -> gaussian::SimdBackend {
         self.backend
     }
 
     /// Set the SIMD backend to use
+    #[expect(dead_code)]
     pub fn set_backend(&mut self, backend: gaussian::SimdBackend) {
         self.backend = backend;
     }
@@ -626,6 +572,7 @@ mod gaussian {
             }
         }
 
+        #[expect(dead_code)]
         pub fn vertical_pass_chunked<const J: usize, const K: usize>(
             &self,
             input: &[f32],
