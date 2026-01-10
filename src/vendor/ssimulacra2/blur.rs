@@ -276,9 +276,11 @@ mod gaussian {
                     let idx = left as usize;
                     let mut a = [0.0f32; 16];
                     let a_slice = &mut a[..lanes];
-                    for lane in 0..lanes {
+                    for (lane, item) in a_slice.iter_mut().enumerate().take(lanes) {
                         // SAFETY: idx < width; lane*width+idx in-bounds for this block.
-                        unsafe { a_slice[lane] = *input_ptr.add(lane * width + idx) };
+                        unsafe {
+                            *item = *input_ptr.add(lane * width + idx);
+                        }
                     }
                     D::F32Vec::load(d, a_slice)
                 } else {
@@ -289,8 +291,11 @@ mod gaussian {
                     let idx = right as usize;
                     let mut a = [0.0f32; 16];
                     let a_slice = &mut a[..lanes];
-                    for lane in 0..lanes {
-                        unsafe { a_slice[lane] = *input_ptr.add(lane * width + idx) };
+                    for (lane, item) in a_slice.iter_mut().enumerate().take(lanes) {
+                        // SAFETY: idx < width; lane*width+idx in-bounds for this block.
+                        unsafe {
+                            *item = *input_ptr.add(lane * width + idx);
+                        }
                     }
                     D::F32Vec::load(d, a_slice)
                 } else {
@@ -323,10 +328,10 @@ mod gaussian {
                     let mut tmp = [0.0f32; 16];
                     let tmp_slice = &mut tmp[..lanes];
                     total.store(tmp_slice);
-                    for lane in 0..lanes {
+                    for (lane, item) in tmp_slice.iter().enumerate().take(lanes) {
                         // SAFETY: x < width; lane*width+x in-bounds for this output block.
                         unsafe {
-                            *output_ptr.add(lane * width + x) = tmp_slice[lane];
+                            *output_ptr.add(lane * width + x) = *item;
                         }
                     }
                 }
@@ -518,9 +523,9 @@ mod gaussian {
                     let row_off = top as usize * width;
                     let mut a = [0.0f32; 16];
                     let a_slice = &mut a[..lanes];
-                    for i in 0..lanes {
+                    for (i, item) in a_slice.iter_mut().enumerate().take(lanes) {
                         // SAFETY: `row_off + i` in bounds for row, and `input` starts at column x.
-                        unsafe { a_slice[i] = *input_ptr.add(row_off + i) };
+                        unsafe { *item = *input_ptr.add(row_off + i) };
                     }
                     D::F32Vec::load(d, a_slice)
                 } else {
@@ -531,8 +536,9 @@ mod gaussian {
                     let row_off = bottom as usize * width;
                     let mut a = [0.0f32; 16];
                     let a_slice = &mut a[..lanes];
-                    for i in 0..lanes {
-                        unsafe { a_slice[i] = *input_ptr.add(row_off + i) };
+                    for (i, item) in a_slice.iter_mut().enumerate().take(lanes) {
+                        // SAFETY: `row_off + i` in bounds for row, and `input` starts at column x.
+                        unsafe { *item = *input_ptr.add(row_off + i) };
                     }
                     D::F32Vec::load(d, a_slice)
                 } else {
@@ -555,9 +561,9 @@ mod gaussian {
                     let mut tmp = [0.0f32; 16];
                     let tmp_slice = &mut tmp[..lanes];
                     total.store(tmp_slice);
-                    for i in 0..lanes {
+                    for (i, item) in tmp_slice.iter().enumerate().take(lanes) {
                         // SAFETY: write within this row; `output` starts at column x.
-                        unsafe { *output_ptr.add(row_off + i) = tmp_slice[i] };
+                        unsafe { *output_ptr.add(row_off + i) = *item };
                     }
                 }
 

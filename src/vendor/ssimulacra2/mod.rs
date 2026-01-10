@@ -172,8 +172,8 @@ fn downscale_by_2(in_data: &LinearRgb) -> LinearRgb {
     const SCALE: usize = 2;
     let in_w = in_data.width();
     let in_h = in_data.height();
-    let out_w = (in_w + SCALE - 1) / SCALE;
-    let out_h = (in_h + SCALE - 1) / SCALE;
+    let out_w = in_w.div_ceil(SCALE);
+    let out_h = in_h.div_ceil(SCALE);
     let mut out_data = vec![[0.0f32; 3]; out_w * out_h];
     let normalize = 1f32 / (SCALE * SCALE) as f32;
 
