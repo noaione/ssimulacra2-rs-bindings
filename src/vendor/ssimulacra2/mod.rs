@@ -7,7 +7,9 @@
 
 pub mod blur;
 
+#[allow(unused_imports)]
 pub use blur::Blur;
+pub use blur::BlurSimd;
 pub use yuvxyb::{LinearRgb, Xyb};
 
 // How often to downscale and score the input images.
@@ -40,7 +42,11 @@ pub enum Ssimulacra2Error {
 /// - If the source and distorted image width and height do not match
 /// - If the source or distorted image cannot be converted to XYB successfully
 /// - If the image is smaller than 8x8 pixels
-pub fn compute_frame_ssimulacra2<T, U>(source: T, distorted: U) -> Result<f64, Ssimulacra2Error>
+pub fn compute_frame_ssimulacra2<T, U>(
+    source: T,
+    distorted: U,
+    force_scalar: bool,
+) -> Result<f64, Ssimulacra2Error>
 where
     LinearRgb: TryFrom<T> + TryFrom<U>,
 {
@@ -68,8 +74,13 @@ where
         vec![0.0f32; width * height],
         vec![0.0f32; width * height],
     ];
-    let mut blur = Blur::new(width, height);
+    let mut blur = BlurSimd::new(width, height);
     let mut msssim = Msssim::default();
+    println!("Using SIMD backend: {:?}", blur.backend());
+    if force_scalar {
+        println!("Forcing scalar backend for blur operations");
+        blur.set_backend(blur::SimdBackend::Scalar);
+    }
 
     for scale in 0..NUM_SCALES {
         println!("Computing scale {}: {}x{}", scale + 1, width, height);
